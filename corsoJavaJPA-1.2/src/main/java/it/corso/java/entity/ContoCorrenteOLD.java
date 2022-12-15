@@ -1,0 +1,112 @@
+package it.corso.java.entity;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
+
+//@Entity
+public class ContoCorrenteOLD{
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer numero;
+	
+	private double saldo;
+	private Date dataApertura;
+	
+	//dati correlati al conto
+	@JoinColumn(name="fk_c")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<MovimentoOLD> listaOperazioni = new ArrayList<>();
+	
+//	@ManyToMany
+//	@JoinTable(name="conti_user",
+//			   joinColumns = @JoinColumn(name="fk_c"),
+//			   inverseJoinColumns = @JoinColumn(name="fk_u"))
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="fk_u")
+	private User proprietario;
+
+	public ContoCorrenteOLD() {}
+			
+	public ContoCorrenteOLD(Integer numero, double saldo, Date dataApertura, List<MovimentoOLD> listaOperazioni,
+			User user) {
+		this.numero = numero;
+		this.saldo = saldo;
+		this.dataApertura = dataApertura;
+		this.listaOperazioni = listaOperazioni;
+		this.proprietario = user;
+	}
+
+	public Integer getNumero() {
+		return numero;
+	}
+
+	public void setNumero(Integer numero) {
+		this.numero = numero;
+	}
+
+	public double getSaldo() {
+		return saldo;
+	}
+
+	public void setSaldo(double saldo) {
+		this.saldo = saldo;
+	}
+
+	public Date getDataApertura() {
+		return dataApertura;
+	}
+
+	public void setDataApertura(Date dataApertura) {
+		this.dataApertura = dataApertura;
+	}
+
+	public List<MovimentoOLD> getListaOperazioni() {
+		return listaOperazioni;
+	}
+
+	public void setListaOperazioni(List<MovimentoOLD> listaOperazioni) {
+		this.listaOperazioni = listaOperazioni;
+	}
+
+	
+
+	public User getProprietario() {
+		return proprietario;
+	}
+
+	public void setProprietario(User proprietario) {
+		this.proprietario = proprietario;
+	}
+
+	
+
+	@Override
+	public String toString() {
+		return "ContoCorrente [numero=" + numero + ", saldo=" + saldo + ", dataApertura=" + dataApertura
+				+ ", listaOperazioni=" + listaOperazioni + ", proprietario=" + proprietario + "]";
+	}
+
+	public void addOperazione(MovimentoOLD m) {
+		this.listaOperazioni.add(m);
+		
+	}
+	
+	
+
+}
